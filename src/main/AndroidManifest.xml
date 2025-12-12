@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:name=".app.MyApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <!-- Main launcher activity -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="sunmi.intent.action.SUNMI_USDK_DEMO" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- SALE ACTIVITY: Accept intent from Flutter -->
+        <activity
+            android:name=".page.trans.SaleActivity"
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible|adjustResize">
+
+            <intent-filter>
+                <action android:name="com.example.PAY_SALE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </activity>
+
+        <activity android:name=".page.trans.VoidActivity" />
+        <activity android:name=".page.trans.RefundActivity" />
+        <activity android:name=".page.trans.AuthActivity" />
+        <activity android:name=".page.trans.CaptureActivity" />
+        <activity android:name=".page.trans.TransactionInquiryActivity" />
+        <activity android:name=".page.trans.TransactionListInquiryActivity" />
+        <activity android:name=".page.trans.SettlementActivity" />
+        <activity android:name=".page.manager.ConnectActivity" />
+
+    </application>
+
+</manifest>

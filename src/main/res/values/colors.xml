@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="theme_color">#242D43</color>
+    <color name="theme_color_80">#CC242D43</color>
+    <color name="theme_color_50">#80242D43</color>
+    <color name="theme_color_10">#1A242D43</color>
+
+    <!-- App 样式中引用的颜色 -->
+    <color name="common_primary_color">@color/theme_color</color>
+    <color name="common_primary_dark_color">@color/black</color>
+    <color name="common_accent_color">#0063F8</color>
+    <color name="common_window_background_color">#F4F4F4</color>
+    <color name="common_text_color">#333333</color>
+    <color name="common_text_hint_color">@color/panda</color>
+    <color name="common_uncheck_color">#CCCCCC</color>
+
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="colorOrange">#FF6600</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="colorBackground">#F0F2F5</color>
+    <color name="colorTextTitle">#222222</color>
+    <color name="colorTextContent">#666666</color>
+    <color name="colorTextHelp">#999999</color>
+    <color name="colorLineColor">#d7d7d7</color>
+
+    <color name="good_head_color">#242D43</color>
+    <color name="color_394664">#394664</color>
+    <color name="color_8B8D91">#8B8D91</color>
+    <color name="color_F9F9F9">#F9F9F9</color>
+    <color name="color_d8dfea">#D8DFEA</color>
+    <color name="color_e05550">#E05550</color>
+    <color name="color_292929">#292929</color>
+    <color name="color_1A1D24">#1A1D24</color>
+    <color name="color_30343A">#30343A</color>
+    <color name="color_e7612d">#E7612D</color>
+    <color name="color_eaeaeb">#EAEAEB</color>
+    <color name="color_c4c4c4">#c4c4c4</color>
+    <color name="color_757575">#757575</color>
+
+    <color name="common_line_color">#ECECEC</color>
+    <color name="common_confirm_text_color">@color/color_e7612d</color>
+    <color name="common_cancel_text_color">#4B4746</color>
+    <color name="common_button_pressed_color">@color/theme_color_50</color>
+    <color name="common_button_disable_color">#BBBBBB</color>
+    <color name="common_icon_color">#7C7C7C</color>
+    <color name="black50">#80000000</color>
+
+</resources>

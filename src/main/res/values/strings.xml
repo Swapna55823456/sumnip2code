@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">L3 Payment Demo</string>
+    <string name="amount">Amount</string>
+    <string name="tip">Tip (cent)</string>
+    <string name="tax">Tax (cent)</string>
+    <string name="ok">OK</string>
+
+    <string name="connect_status">Connection status：</string>
+    <string name="unconnected">Unconnected</string>
+    <string name="connected">Connected</string>
+    <string name="connecting">Connecting...</string>
+    <string name="connect_type">Connection type：</string>
+    <string name="connect_device">Connected device：</string>
+    <string name="not_have">--</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="connect_local">LOCAL</string>
+    <string name="connect_usb">USB</string>
+    <string name="connect_wifi">WIFI</string>
+    <string name="connect_bluetooth">Bluetooth</string>
+    <string name="connect_serial_port">Serial Port</string>
+
+    <string name="common_loading">Data Loading&#8230;</string>
+    <string name="common_confirm">Confirm</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="can_be_null">Can be null</string>
+</resources>

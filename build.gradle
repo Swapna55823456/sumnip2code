@@ -1,0 +1,78 @@
+plugins {
+    id 'com.android.application' version '8.1.1'
+    id 'org.jetbrains.kotlin.android' version '1.9.23'
+    id 'org.jetbrains.kotlin.kapt' version '1.9.23'
+    id 'org.jetbrains.kotlin.plugin.parcelize' version '1.9.23'
+}
+
+android {
+    namespace 'com.sunmi.payment.demo'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.sunmi.payment.demo"
+        minSdk 24
+        targetSdk 33
+        versionCode 2
+        versionName "1.0.2"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        sunmi {
+            keyAlias 'sunmi'
+            keyPassword 'SunmiPay'
+            storeFile file('sunmi.jks')
+            storePassword 'sunmipay'
+        }
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+            signingConfig signingConfigs.sunmi
+        }
+        release {
+            minifyEnabled false
+            debuggable true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.sunmi
+        }
+    }
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                outputFileName = "L3PaymentDemo_" + defaultConfig.versionName + "_" + buildType.name + ".apk"
+            }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        buildConfig true
+    }
+}
+
+dependencies {
+
+    implementation files('libs/SunmiPaymentLib_1.0.10_release.aar')
+
+    implementation 'com.tencent:mmkv-static:1.3.0'
+    implementation 'com.github.LingChenJie:LightArchitecture:1.1.14'
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.12.0'
+
+    implementation 'com.github.getActivity:ToastUtils:11.2'
+    implementation 'com.github.getActivity:TitleBar:9.2'
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
