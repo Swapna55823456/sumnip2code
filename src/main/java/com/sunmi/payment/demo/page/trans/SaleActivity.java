@@ -4,16 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.hjq.bar.TitleBar;
 import com.sunmi.payment.demo.R;
 import com.sunmi.payment.demo.page.BaseTransActivity;
-import com.sunmi.payment.demo.utils.OnTitleBarListenerWrapper;
 
 import org.json.JSONObject;
 
@@ -26,20 +23,12 @@ public class SaleActivity extends BaseTransActivity {
     private TextView tvResult;
 
     private String currentOrderId = "";
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale);
-
-        TitleBar titleBar = findViewById(R.id.title_bar);
-        titleBar.setOnTitleBarListener(new OnTitleBarListenerWrapper() {
-            @Override
-            public void onLeftClick(View view) {
-                finish();
-            }
-        });
 
         editAmount = findViewById(R.id.edit_amount);
         editTip = findViewById(R.id.edit_tip);
@@ -47,74 +36,59 @@ public class SaleActivity extends BaseTransActivity {
         editOrderId = findViewById(R.id.edit_order_id);
         tvResult = findViewById(R.id.tv_result);
 
-        // Receive data from Flutter
+        // Receive values from Flutter
         if (getIntent() != null) {
-            String amtStr = getIntent().getStringExtra("amount");
-            if (amtStr != null) editAmount.setText(amtStr);
+            String amt = getIntent().getStringExtra("amount");
+            String orderId = getIntent().getStringExtra("orderId");
 
-            String orderIdStr = getIntent().getStringExtra("orderId");
-            if (orderIdStr != null) editOrderId.setText(orderIdStr);
+            if (amt != null) editAmount.setText(amt);
+            if (orderId != null) editOrderId.setText(orderId);
         }
 
-        findViewById(R.id.mb_ok).setOnClickListener(view -> {
-            tvResult.setText("");
-            sale();
-        });
+        // 🚀 AUTO START SALE (NO BUTTON)
+        tvResult.setText("");
+        handler.postDelayed(this::sale, 300);
     }
 
     private void sale() {
-        String amount = editAmount.getText().toString().trim();
-        String tip = editTip.getText().toString().trim();
-        String tax = editTax.getText().toString().trim();
+        String amountStr = editAmount.getText().toString().trim();
 
         long amountLong;
-
         try {
-            amount = amount.replace(",", "").trim();
-            double amtDouble = Double.parseDouble(amount);
-            amountLong = Math.round(amtDouble * 100);
+            double amt = Double.parseDouble(amountStr.replace(",", ""));
+            amountLong = Math.round(amt * 100);
         } catch (Exception e) {
-            showToast("Invalid amount");
+            sendError("Invalid amount");
             return;
         }
 
         if (amountLong <= 0) {
-            showToast("Invalid amount");
+            sendError("Invalid amount");
             return;
         }
 
         currentOrderId = editOrderId.getText().toString().trim();
         if (TextUtils.isEmpty(currentOrderId)) {
-            currentOrderId = System.currentTimeMillis() + "";
+            currentOrderId = String.valueOf(System.currentTimeMillis());
         }
 
         try {
             JSONObject obj = new JSONObject();
             obj.put("action", "purchase");
-            obj.put("orderId", currentOrderId);
             obj.put("paymentType", "credit");
+            obj.put("orderId", currentOrderId);
             obj.put("amount", amountLong);
+            obj.put("tip", 0);
+            obj.put("tax", 0);
 
-            long tipLong = TextUtils.isEmpty(tip) ? 0 : Long.parseLong(tip);
-            long taxLong = TextUtils.isEmpty(tax) ? 0 : Long.parseLong(tax);
-
-            obj.put("tip", tipLong);
-            obj.put("tax", taxLong);
-
-            // Sunmi processes transaction and writes result JSON to tvResult
             startTrans(obj.toString(), tvResult);
-
-            // Re-check for result until it arrives
             handler.postDelayed(this::checkAndSendResult, 500);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            sendError(e.getMessage());
         }
     }
 
-    /**
-     * Reads the Sunmi JSON from tvResult and sends full data back to Flutter
-     */
     private void checkAndSendResult() {
         String resultJson = tvResult.getText().toString().trim();
 
@@ -126,23 +100,35 @@ public class SaleActivity extends BaseTransActivity {
         try {
             JSONObject sunmi = new JSONObject(resultJson);
 
-            JSONObject sendBack = new JSONObject();
-            sendBack.put("status", sunmi.optString("resultCode").equals("00") ? "SUCCESS" : "FAILED");
-            sendBack.put("message", sunmi.optString("resultMsg"));
-            sendBack.put("orderId", sunmi.optString("orderId", currentOrderId));
-            sendBack.put("amount", sunmi.optString("processedAmount"));
-
-            // ⭐ FULL RAW SUNMI RESPONSE
-            sendBack.put("fullResponse", sunmi.toString());
+            JSONObject response = new JSONObject();
+            response.put("status",
+                    "00".equals(sunmi.optString("resultCode")) ? "SUCCESS" : "FAILED");
+            response.put("message", sunmi.optString("resultMsg"));
+            response.put("orderId", sunmi.optString("orderId", currentOrderId));
+            response.put("amount", sunmi.optString("processedAmount"));
+            response.put("fullResponse", sunmi.toString());
 
             Intent intent = new Intent();
-            intent.putExtra("paymentResult", sendBack.toString());
-
+            intent.putExtra("paymentResult", response.toString());
             setResult(RESULT_OK, intent);
             finish();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            sendError(e.getMessage());
         }
+    }
+
+    private void sendError(String msg) {
+        try {
+            JSONObject err = new JSONObject();
+            err.put("status", "FAILED");
+            err.put("message", msg);
+
+            Intent intent = new Intent();
+            intent.putExtra("paymentResult", err.toString());
+            setResult(RESULT_OK, intent);
+        } catch (Exception ignored) {
+        }
+        finish();
     }
 }
