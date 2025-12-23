@@ -83,7 +83,9 @@ public class SaleActivity extends BaseTransActivity {
             obj.put("amount", amountLong);
             obj.put("tip", 0);
             obj.put("tax", 0);
-            Log.e(TAG, "sale REQUEST → " + tvResult);
+
+            // ✅ PRINT SALE REQUEST JSON
+            Log.e("SUNMI_SALE_REQUEST", "SALE REQUEST → " + obj.toString());
 
             startTrans(obj.toString(), tvResult);
             handler.postDelayed(this::checkAndSendResult, 500);
@@ -92,6 +94,7 @@ public class SaleActivity extends BaseTransActivity {
             sendError(e.getMessage());
         }
     }
+
 
     private void checkAndSendResult() {
         String resultJson = tvResult.getText().toString().trim();
