@@ -34,8 +34,11 @@
             </intent-filter>
 
         </activity>
+        <activity
+            android:name=".page.trans.VoidActivity"
+            android:exported="true"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
 
-        <activity android:name=".page.trans.VoidActivity" />
         <activity android:name=".page.trans.RefundActivity" />
         <activity android:name=".page.trans.AuthActivity" />
         <activity android:name=".page.trans.CaptureActivity" />

@@ -1,9 +1,12 @@
 package com.sunmi.payment.demo.page.trans;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -80,6 +83,7 @@ public class SaleActivity extends BaseTransActivity {
             obj.put("amount", amountLong);
             obj.put("tip", 0);
             obj.put("tax", 0);
+            Log.e(TAG, "sale REQUEST → " + tvResult);
 
             startTrans(obj.toString(), tvResult);
             handler.postDelayed(this::checkAndSendResult, 500);
@@ -100,13 +104,30 @@ public class SaleActivity extends BaseTransActivity {
         try {
             JSONObject sunmi = new JSONObject(resultJson);
 
+            // ✅ DEBUG: PRINT FULL SALE RESPONSE
+            Log.e("SUNMI_SALE_RAW", "SALE RESPONSE → " + sunmi.toString());
+
             JSONObject response = new JSONObject();
-            response.put("status",
-                    "00".equals(sunmi.optString("resultCode")) ? "SUCCESS" : "FAILED");
+            response.put(
+                    "status",
+                    "00".equals(sunmi.optString("resultCode")) ? "SUCCESS" : "FAILED"
+            );
             response.put("message", sunmi.optString("resultMsg"));
-            response.put("orderId", sunmi.optString("orderId", currentOrderId));
+
+            // ✅ MUST COME FROM SUNMI
+            response.put("orderId", sunmi.optString("orderId"));
+            response.put("transactionId", sunmi.optString("transactionId"));
+
             response.put("amount", sunmi.optString("processedAmount"));
             response.put("fullResponse", sunmi.toString());
+
+            Log.e(
+                    "SUNMI_SALE_PAIR",
+                    "SALE PAIR → orderId="
+                            + sunmi.optString("orderId")
+                            + ", txnId="
+                            + sunmi.optString("transactionId")
+            );
 
             Intent intent = new Intent();
             intent.putExtra("paymentResult", response.toString());
@@ -117,6 +138,7 @@ public class SaleActivity extends BaseTransActivity {
             sendError(e.getMessage());
         }
     }
+
 
     private void sendError(String msg) {
         try {
